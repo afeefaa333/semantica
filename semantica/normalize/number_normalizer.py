@@ -664,8 +664,16 @@ class CurrencyNormalizer:
 
         # Extract amount if not found
         if amount is None:
-            digits_match = re.search(r"\d[\d,]*\.?\d*", currency_input)
-            if digits_match:
+            # Second alternative handles bare leading-decimal amounts (e.g. ".5")
+            # that don't start with a digit.
+            digits_match = re.search(r"\d[\d,]*\.?\d*|\.\d+", currency_input)
+            # A "." right after the match means a malformed number like "1.2.3".
+            trailing_char = (
+                currency_input[digits_match.end() : digits_match.end() + 1]
+                if digits_match
+                else ""
+            )
+            if digits_match and trailing_char != ".":
                 amount_str = digits_match.group().replace(",", "")
                 # Only a k/m/b directly after the number counts as a magnitude
                 # suffix, so stray letters elsewhere (e.g. "ruby 100") aren't

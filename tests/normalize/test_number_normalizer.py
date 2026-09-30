@@ -107,6 +107,17 @@ class TestCurrencyNormalizer(unittest.TestCase):
         result = self.normalizer.normalize_currency("$100")
         self.assertEqual(result["amount"], 100.0)
 
+    def test_bare_leading_decimal_is_not_inflated(self):
+        result = self.normalizer.normalize_currency(".5")
+        self.assertEqual(result["amount"], 0.5)
+
+        result = self.normalizer.normalize_currency(".5M")
+        self.assertEqual(result["amount"], 500_000.0)
+
+    def test_malformed_amount_returns_none(self):
+        result = self.normalizer.normalize_currency("$1.2.3")
+        self.assertIsNone(result["amount"])
+
 
 class TestScientificNotationHandler(unittest.TestCase):
     def setUp(self):
