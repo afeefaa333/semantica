@@ -143,7 +143,7 @@ class NumberNormalizer:
             'b': 1_000_000_000,
             't': 1_000_000_000_000
         }
-        
+
         if cleaned and cleaned[-1].lower() in suffix_map:
             last_char = cleaned[-1].lower()
             try:
