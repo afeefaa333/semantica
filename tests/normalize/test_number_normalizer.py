@@ -126,7 +126,10 @@ class TestCurrencyNormalizer(unittest.TestCase):
         self.assertEqual(result["amount"], 5_000_000.0)
         result = self.normalizer.normalize_currency("2.5MM USD")
         self.assertEqual(result["amount"], 2_500_000.0)
-
+        result = self.normalizer.normalize_currency("5MM")
+        self.assertEqual(result["amount"], 5_000_000.0)
+        result = self.normalizer.normalize_currency("5MM1")
+        self.assertEqual(result["amount"], 5.0)
 
 
 class TestScientificNotationHandler(unittest.TestCase):
